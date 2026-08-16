@@ -1,0 +1,1 @@
+import './StarBorder.css'; export default function StarBorder({as:Tag='button',className='',color='cyan',speed='6s',thickness=1,children,...props}){return <Tag className={`star-border ${className}`} style={{'--star-color':color,'--star-speed':speed,padding:thickness}} {...props}><span>{children}</span></Tag>}

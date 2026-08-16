@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+.venv/
+backend/similarity.db
+frontend/dist/
+frontend/node_modules/
+.env
