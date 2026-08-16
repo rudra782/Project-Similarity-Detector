@@ -1,0 +1,1 @@
+.grid-motion{overflow:hidden;padding:2rem 0;background:var(--gradient)}.grid-row{display:flex;width:max-content;gap:1rem;margin:1rem -10vw}.grid-item{display:grid;place-items:center;width:220px;height:130px;border-radius:16px;background:#18181b;font-size:2rem;font-weight:bold}.grid-item img{width:100%;height:100%;object-fit:cover;border-radius:inherit}
