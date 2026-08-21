@@ -1,47 +1,841 @@
-import {useEffect,useRef,useState} from 'react';
-import {api} from './services/api';
-import DotField from './components/reactbits/DotField/DotField';
-import VariableProximity from './components/reactbits/VariableProximity/VariableProximity';
-import SpecularButton from './components/reactbits/SpecularButton/SpecularButton';
-import StarBorder from './components/reactbits/StarBorder/StarBorder';
-import ScrollFloat from './components/reactbits/ScrollFloat/ScrollFloat';
-import Carousel from './components/reactbits/Carousel/Carousel';
-import GridMotion from './components/reactbits/GridMotion/GridMotion';
-import Iridescence from './components/reactbits/Iridescence/Iridescence';
-import ScrollVelocity from './components/reactbits/ScrollVelocity/ScrollVelocity';
+import { useEffect, useRef, useState } from "react";
+import { api } from "./services/api";
+import DotField from "./components/reactbits/DotField/DotField";
+import VariableProximity from "./components/reactbits/VariableProximity/VariableProximity";
+import SpecularButton from "./components/reactbits/SpecularButton/SpecularButton";
+// import StarBorder from './components/reactbits/StarBorder/StarBorder';
+import ScrollFloat from "./components/reactbits/ScrollFloat/ScrollFloat";
+import Carousel from "./components/reactbits/Carousel/Carousel";
+import GridMotion from "./components/reactbits/GridMotion/GridMotion";
+import Iridescence from "./components/reactbits/Iridescence/Iridescence";
+import ScrollVelocity from "./components/reactbits/ScrollVelocity/ScrollVelocity";
 
-const go=p=>{history.pushState({},'',p);dispatchEvent(new PopStateEvent('popstate'))};
-function Link({to,children,className=''}){return <a href={to} className={className} onClick={e=>{if(!e.metaKey&&!e.ctrlKey){e.preventDefault();go(to)}}}>{children}</a>}
-function Header(){return <header className="header"><Link to="/" className="brand"><span>PS</span> Project Similarity</Link><nav aria-label="Main navigation"><Link to="/analyze">Analyze</Link><Link to="/projects">Repository</Link><Link to="/how-it-works">How it works</Link></nav><Link to="/analyze" className="nav-cta">New analysis →</Link></header>}
-const features=[{title:'Semantic text comparison',description:'Compare abstracts, descriptions and reports with TF-IDF vectors and cosine similarity.'},{title:'Keyword & token matching',description:'Surface shared concepts with transparent Jaccard overlap and matching tokens.'},{title:'Fast candidate retrieval',description:'MinHash signatures prepare the repository for scalable LSH shortlisting.'},{title:'Source-code similarity',description:'Normalize comments and identifiers, then compare structural code-token patterns.'},{title:'Explainable results',description:'Inspect every component score, shared topic and evidence—not a mystery percentage.'}];
-const engine=['TF-IDF','Cosine','Jaccard','MinHash','LSH','Tokenization','N-Grams','Code Tokens','Project Reports','Abstract','Keywords','Repository','Candidate Search','Ranking','Preprocessing','Stopwords','Normalization','Code Structure','Feature Vectors','Similarity Score','Explainability','Top Matches','Document Parsing','Source Code','Text Analysis','Metadata','Report Generation','Fast Retrieval'];
-function Landing(){const hero=useRef(null);return <><main><section className="hero" ref={hero}>
-  <div className="hero-background" aria-hidden="true"><DotField spacing={22} radius={1.1} influenceRadius={180}/><div className="hero-glow"/></div>
-  <div className="hero-content">
-    <p className="eyebrow"><i/> ACADEMIC DECISION SUPPORT</p>
-    <h1><VariableProximity label={'Detect similarity.\nPreserve originality.'} containerRef={hero} radius={180}/></h1>
-    <p className="lede">Compare reports, concepts and source code against a historical project repository using multiple explainable similarity techniques.</p>
-    <div className="hero-actions"><SpecularButton onClick={()=>go('/analyze')}>Analyze Project</SpecularButton><StarBorder onClick={()=>go('/how-it-works')}>See how it works</StarBorder></div>
-    <div className="hero-proof"><span><b>6</b> comparison signals</span><span><b>100%</b> explainable</span><span><b>0</b> code execution</span></div>
-  </div>
-</section>
-<section className="section intro"><div><p className="eyebrow">THE REVIEW GAP</p><ScrollFloat>Similarity needs context.</ScrollFloat></div><p>Project review is more nuanced than exact-copy detection. This platform retrieves related historical work, measures several kinds of overlap, and presents evidence for a human evaluator. It never declares misconduct.</p></section>
-<section className="section"><p className="eyebrow">CAPABILITIES</p><ScrollFloat>Built for explainable analysis.</ScrollFloat><Carousel items={features} autoplay autoplayDelay={3500} pauseOnHover loop/></section>
-<section className="workflow"><div className="section"><p className="eyebrow">HOW IT WORKS</p><h2>One submission. Multiple independent signals.</h2><div className="steps">{['Validate & extract','Normalize content','Retrieve candidates','Compare signals','Rank & explain'].map((x,i)=><article key={x}><b>0{i+1}</b><h3>{x}</h3><p>{['PDF, text and source uploads are checked before processing.','Text and code become consistent, comparable tokens.','MinHash and LSH shortlist likely repository matches.','Cosine, Jaccard, text and code scores run independently.','Weighted evidence becomes a review-ready result.'][i]}</p></article>)}</div></div></section>
-<section id="algorithms" className="section"><p className="eyebrow">ALGORITHM STACK</p><ScrollFloat>Not one score. A body of evidence.</ScrollFloat><div className="algorithm-grid">{[['TEXT SIMILARITY','TF-IDF + cosine','Weights meaningful terms and compares vector direction.'],['DIRECT OVERLAP','Jaccard','Measures shared keywords and normalized token sets.'],['FAST SEARCH','MinHash + LSH','Approximates overlap before detailed comparison.'],['CODE ANALYSIS','Token structure','Preserves syntax while normalizing incidental naming.']].map(x=><article key={x[0]}><span>{x[0]}</span><h3>{x[1]}</h3><p>{x[2]}</p></article>)}</div></section>
-<section className="engine"><div className="engine-copy"><p className="eyebrow">INSIDE THE SIMILARITY ENGINE</p><h2>Every cell has a role.</h2></div><GridMotion items={engine} gradientColor="#090b13"/></section>
-<section className="section preview"><div><p className="eyebrow">EXPLAINABLE BY DESIGN</p><h2>See why a project ranked highly.</h2><p>Review the overall interpretation, each algorithm score, shared concepts and short evidence. Missing inputs automatically redistribute their weight.</p><Link to="/analyze" className="text-link">Run the demo scenario →</Link></div><ScorePreview/></section>
-<section className="cta"><Iridescence color={[.35,.25,.8]} speed={.15} amplitude={.05}/><div><p className="eyebrow">READY TO COMPARE?</p><h2>Put evidence before assumptions.</h2><p>Analyze a new academic project against the seeded repository.</p><button onClick={()=>go('/analyze')}>Start an analysis →</button></div></section>
-<ScrollVelocity texts={['DETECT • COMPARE • ANALYZE • VERIFY • ','PROJECT SIMILARITY • EXPLAINABLE RESULTS • ']} velocity={18}/></main><Footer/></>}
-function ScorePreview(){return <div className="score-preview"><div className="score-top"><div><small>OVERALL SIMILARITY</small><strong>78%</strong><span>High Similarity</span></div><div className="ring">78</div></div>{[['Abstract',84],['Report',76],['Keywords',71],['Code tokens',81]].map(([x,n])=><div className="metric" key={x}><label>{x}<b>{n}%</b></label><i><em style={{width:n+'%'}}/></i></div>)}<p className="demo-label">Illustrative product preview</p></div>}
-function Analyzer(){const [busy,setBusy]=useState(false),[error,setError]=useState(''),[stage,setStage]=useState(0);const stages=['Reading submission','Extracting project text','Creating feature vectors','Searching repository','Comparing source code','Ranking results'];async function submit(e){e.preventDefault();setError('');const f=new FormData(e.currentTarget);const report=f.get('report'),source=f.get('source');if(report?.size&&!['application/pdf','text/plain'].includes(report.type)){setError('Report must be PDF or TXT.');return}if(source?.size>5e6){setError('Source bundle must be smaller than 5 MB.');return}setBusy(true);let timer=setInterval(()=>setStage(s=>Math.min(s+1,5)),220);try{const r=await api.analyze(f);clearInterval(timer);setStage(6);go('/results/'+r.id)}catch(err){clearInterval(timer);setError(err.message);setBusy(false)}}return <main className="app-page"><PageTitle eyebrow="NEW ANALYSIS" title="Compare a project" copy="Provide core project content. Files are read as data only and source code is never executed."/>{busy?<Processing stages={stages} stage={stage}/>:<form className="form-card" onSubmit={submit}><div className="form-grid"><Field label="Project title" name="title" required minLength="3" placeholder="Academic Project Similarity Checker"/><Field label="Team / student" name="team_name" placeholder="Team name"/><label className="wide">Abstract<textarea name="abstract" required minLength="20" rows="5" placeholder="Describe the problem, method and expected outcome…"/></label><label className="wide">Description<textarea name="description" rows="3" placeholder="Add implementation details and scope…"/></label><Field label="Keywords (comma separated)" name="keywords" placeholder="TF-IDF, cosine similarity, NLP"/><label>Category<select name="category"><option>Natural Language Processing</option><option>Machine Learning</option><option>Software Engineering</option><option>Web Development</option><option>Other</option></select></label><Field label="Academic year" name="academic_year" placeholder="2025-26"/><div/><Upload name="report" label="Project report" accept=".pdf,.txt" note="PDF or TXT · maximum 10 MB"/><Upload name="source" label="Source code" accept=".zip,.py,.js,.jsx,.ts,.tsx,.java,.cpp,.c,.cs" note="ZIP or source file · maximum 5 MB"/></div>{error&&<p className="error" role="alert">{error}</p>}<div className="form-footer"><p>By continuing, you acknowledge results support—not replace—academic review.</p><button>Run Similarity Analysis →</button></div></form>}</main>}
-function Field({label,...props}){return <label>{label}<input {...props}/></label>}function Upload({label,note,...props}){return <label className="upload"><span>↑</span><b>{label}</b><small>{note}</small><input type="file" {...props}/></label>}
-function Processing({stages,stage}){return <section className="processing"><div className="pulse"/><p className="eyebrow">ANALYSIS IN PROGRESS</p><h2>Building an evidence trail</h2>{stages.map((x,i)=><div className={i<stage?'done':i===stage?'active':''} key={x}><b>{i<stage?'✓':i===stage?'●':'○'}</b>{x}</div>)}</section>}
-function Projects(){const [items,setItems]=useState([]),[query,setQuery]=useState(''),[error,setError]=useState('');useEffect(()=>{const id=setTimeout(()=>api.projects('?search='+encodeURIComponent(query)).then(setItems).catch(e=>setError(e.message)),200);return()=>clearTimeout(id)},[query]);return <main className="app-page"><PageTitle eyebrow="HISTORICAL REPOSITORY" title="Project repository" copy="Search the projects used as evidence during similarity analysis."/><div className="toolbar"><input aria-label="Search projects" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search title or abstract…"/><span>{items.length} projects</span></div>{error&&<p className="error">{error}</p>}<div className="project-grid">{items.map(p=><Link to={'/projects/'+p.id} className="project-card" key={p.id}><div><span>{p.category}</span><b>{p.academic_year}</b></div><h2>{p.title}</h2><p>{p.abstract}</p><footer><small>{p.team_name}</small><strong>View project →</strong></footer></Link>)}</div></main>}
-function ProjectDetail({id}){const [p,setP]=useState();useEffect(()=>{api.project(id).then(setP)},[id]);if(!p)return <main className="app-page"><p>Loading project…</p></main>;return <main className="app-page"><Link to="/projects" className="back">← Repository</Link><article className="detail"><p className="eyebrow">{p.category} · {p.academic_year}</p><h1>{p.title}</h1><p className="lede">{p.abstract}</p><h2>Project description</h2><p>{p.description}</p><h2>Keywords</h2><div className="chips">{p.keywords.map(x=><span key={x}>{x}</span>)}</div><dl><dt>Team</dt><dd>{p.team_name}</dd><dt>Added</dt><dd>{new Date(p.created_at).toLocaleDateString()}</dd></dl><Link to="/analyze" className="button-link">Analyze a related project →</Link></article></main>}
-function Results({id}){const [a,setA]=useState(),[error,setError]=useState('');useEffect(()=>{api.analysis(id).then(setA).catch(e=>setError(e.message))},[id]);if(error)return <main className="app-page"><p className="error">{error}</p></main>;if(!a)return <main className="app-page"><p>Loading analysis…</p></main>;const top=a.results[0];return <main className="app-page results"><div className="result-head"><div><p className="eyebrow">ANALYSIS #{a.id}</p><h1>{a.title}</h1><p>Completed {new Date(a.created_at).toLocaleString()} · Compared against {a.results.length} candidates</p></div><button onClick={()=>print()}>Print report</button></div><section className="overall"><div><small>TOP-MATCH SIMILARITY</small><strong>{Math.round(a.overall_score*100)}%</strong><span>{a.classification}</span></div><p>This score indicates evidence strength for the nearest repository match. It is not an automatic misconduct decision.</p></section>{top&&<section className="top-match"><p className="eyebrow">TOP MATCH</p><h2><Link to={'/projects/'+top.project.id}>{top.project.title}</Link></h2><p>{top.project.abstract}</p><Breakdown components={top.components}/><h3>Why it ranked highly</h3><ul>{top.evidence.map(x=><li key={x}>{x}</li>)}</ul><div className="chips">{top.shared_keywords.map(x=><span key={x}>{x}</span>)}</div></section>}<h2>Ranked candidates</h2><div className="matches">{a.results.map(r=><article key={r.rank}><b>#{r.rank}</b><div><h3><Link to={'/projects/'+r.project.id}>{r.project.title}</Link></h3><span>{r.classification}</span></div><strong>{Math.round(r.score*100)}%</strong></article>)}</div></main>}
-function Breakdown({components}){return <div className="breakdown">{Object.entries(components).map(([k,v])=><div className="metric" key={k}><label>{k}<b>{Math.round(v*100)}%</b></label><i><em style={{width:(v*100)+'%'}}/></i></div>)}</div>}
-function How(){return <main className="app-page"><PageTitle eyebrow="SYSTEM EXPLANATION" title="How similarity is calculated" copy="A transparent retrieval and ranking pipeline built for academic evaluation."/><div className="how-grid">{[['01','Submission & validation','Metadata, PDF/TXT reports and source bundles are size and type checked. No submitted code is executed.'],['02','Preprocessing','Text is lowercased, tokenized and stripped of punctuation and common stopwords. Code comments and identifier names are normalized.'],['03','Candidate retrieval','MinHash signatures approximate shingle overlap. LSH provides a scalable shortlist strategy; small repositories use a direct fallback.'],['04','Detailed comparison','TF-IDF cosine, keyword Jaccard, report similarity, title similarity, MinHash and code-token comparison produce separate values.'],['05','Weighted ranking','Available signals are weighted and missing code or reports have their weight redistributed—not treated as zero.'],['06','Explainable report','The dashboard exposes component scores, matching topics, reasons and ranked repository projects for human review.']].map(x=><article key={x[0]}><b>{x[0]}</b><h2>{x[1]}</h2><p>{x[2]}</p></article>)}</div><aside className="notice"><b>Important interpretation</b><p>Similarity indicates related material or structure. It can reflect a shared domain, standard terminology, legitimate reuse, or a case requiring closer review. The system never labels a submission as plagiarism.</p></aside></main>}
-function PageTitle({eyebrow,title,copy}){return <header className="page-title"><p className="eyebrow">{eyebrow}</p><h1>{title}</h1><p>{copy}</p></header>}
-function Footer(){return <footer className="footer"><div><b>Project Similarity Detection System</b><p>University SGP Project · Explainable academic decision support.</p></div><div><b>Navigate</b><Link to="/analyze">Analyze</Link><Link to="/projects">Repository</Link><Link to="/how-it-works">How it works</Link></div><div><b>Technology</b><span>TF-IDF · Cosine</span><span>Jaccard · MinHash</span><span>LSH · Code tokens</span></div><div><b>Created by</b><span>Student team details pending</span><small>No identities fabricated.</small></div></footer>}
-export default function App(){const [path,setPath]=useState(location.pathname);useEffect(()=>{const f=()=>{setPath(location.pathname);scrollTo(0,0)};addEventListener('popstate',f);return()=>removeEventListener('popstate',f)},[]);let page=path==='/'?<Landing/>:path==='/analyze'?<Analyzer/>:path==='/projects'?<Projects/>:path==='/how-it-works'?<How/>:path.startsWith('/results/')?<Results id={path.split('/')[2]}/>:path.startsWith('/projects/')?<ProjectDetail id={path.split('/')[2]}/>:<main className="app-page"><h1>Page not found</h1><Link to="/">Return home</Link></main>;return <><Header/>{page}</>}
+const go = (p) => {
+  history.pushState({}, "", p);
+  dispatchEvent(new PopStateEvent("popstate"));
+};
+function Link({ to, children, className = "" }) {
+  return (
+    <a
+      href={to}
+      className={className}
+      onClick={(e) => {
+        if (!e.metaKey && !e.ctrlKey) {
+          e.preventDefault();
+          go(to);
+        }
+      }}
+    >
+      {children}
+    </a>
+  );
+}
+function Header() {
+  return (
+    <header className="header">
+      <Link to="/" className="brand">
+        <span>PS</span> Project Similarity
+      </Link>
+      <nav aria-label="Main navigation">
+        <Link to="/analyze">Analyze</Link>
+        <Link to="/projects">Repository</Link>
+        <Link to="/how-it-works">How it works</Link>
+      </nav>
+      <Link to="/analyze" className="nav-cta">
+        New analysis →
+      </Link>
+    </header>
+  );
+}
+const features = [
+  {
+    title: "Semantic text comparison",
+    description:
+      "Compare abstracts, descriptions and reports with TF-IDF vectors and cosine similarity.",
+  },
+  {
+    title: "Keyword & token matching",
+    description:
+      "Surface shared concepts with transparent Jaccard overlap and matching tokens.",
+  },
+  {
+    title: "Fast candidate retrieval",
+    description:
+      "MinHash signatures prepare the repository for scalable LSH shortlisting.",
+  },
+  {
+    title: "Source-code similarity",
+    description:
+      "Normalize comments and identifiers, then compare structural code-token patterns.",
+  },
+  {
+    title: "Explainable results",
+    description:
+      "Inspect every component score, shared topic and evidence—not a mystery percentage.",
+  },
+];
+const engine = [
+  "TF-IDF",
+  "Cosine",
+  "Jaccard",
+  "MinHash",
+  "LSH",
+  "Tokenization",
+  "N-Grams",
+  "Code Tokens",
+  "Project Reports",
+  "Abstract",
+  "Keywords",
+  "Repository",
+  "Candidate Search",
+  "Ranking",
+  "Preprocessing",
+  "Stopwords",
+  "Normalization",
+  "Code Structure",
+  "Feature Vectors",
+  "Similarity Score",
+  "Explainability",
+  "Top Matches",
+  "Document Parsing",
+  "Source Code",
+  "Text Analysis",
+  "Metadata",
+  "Report Generation",
+  "Fast Retrieval",
+];
+function Landing() {
+  const hero = useRef(null);
+  return (
+    <>
+      <main>
+        <section className="hero" ref={hero}>
+          <div className="hero-background" aria-hidden="true">
+            <DotField spacing={22} radius={1.1} influenceRadius={180} />
+            <div className="hero-glow" />
+          </div>
+          <div className="hero-content">
+            <p className="eyebrow">
+              <i /> ACADEMIC DECISION SUPPORT
+            </p>
+            <h1>
+              <VariableProximity
+                label={"Detect similarity.\nPreserve originality."}
+                containerRef={hero}
+                radius={180}
+              />
+            </h1>
+            <p className="lede">
+              Compare reports, concepts and source code against a historical
+              project repository using multiple explainable similarity
+              techniques.
+            </p>
+            {/* <div className="hero-actions">
+              <SpecularButton onClick={() => go("/analyze")}>
+                Analyze Project
+              </SpecularButton>
+              <StarBorder onClick={() => go("/how-it-works")}>
+                See how it works
+              </StarBorder>
+            </div> */}
+            <div className="hero-actions">
+              <SpecularButton
+                onClick={() => go("/analyze")}
+                lineColor="#62b2ff"
+                baseColor="#525252"
+                intensity={1.15}
+                followMouse={true}
+                proximity={250}
+              >
+                Analyze Project
+              </SpecularButton>
+
+              <SpecularButton
+                onClick={() => go("/how-it-works")}
+                lineColor="#8b7cff"
+                baseColor="#353545"
+                intensity={0.65}
+                followMouse={true}
+                proximity={250}
+              >
+                See how it works
+              </SpecularButton>
+            </div>
+            {/* <div className="hero-proof">
+              <span>
+                <b>6</b> comparison signals
+              </span>
+              <span>
+                <b>100%</b> explainable
+              </span>
+              <span>
+                <b>0</b> code execution
+              </span>
+            </div> */}
+          </div>
+        </section>
+        <section className="section intro">
+          <div>
+            <p className="eyebrow">THE REVIEW GAP</p>
+            <ScrollFloat>Similarity needs context.</ScrollFloat>
+          </div>
+          <p>
+            Project review is more nuanced than exact-copy detection. This
+            platform retrieves related historical work, measures several kinds
+            of overlap, and presents evidence for a human evaluator. It never
+            declares misconduct.
+          </p>
+        </section>
+        <section className="section">
+          <p className="eyebrow">CAPABILITIES</p>
+          <ScrollFloat>Built for explainable analysis.</ScrollFloat>
+          <Carousel
+            items={features}
+            autoplay
+            autoplayDelay={3500}
+            pauseOnHover
+            loop
+          />
+        </section>
+        <section className="workflow">
+          <div className="section">
+            <p className="eyebrow">HOW IT WORKS</p>
+            <h2>One submission. Multiple independent signals.</h2>
+            <div className="steps">
+              {[
+                "Validate & extract",
+                "Normalize content",
+                "Retrieve candidates",
+                "Compare signals",
+                "Rank & explain",
+              ].map((x, i) => (
+                <article key={x}>
+                  <b>0{i + 1}</b>
+                  <h3>{x}</h3>
+                  <p>
+                    {
+                      [
+                        "PDF, text and source uploads are checked before processing.",
+                        "Text and code become consistent, comparable tokens.",
+                        "MinHash and LSH shortlist likely repository matches.",
+                        "Cosine, Jaccard, text and code scores run independently.",
+                        "Weighted evidence becomes a review-ready result.",
+                      ][i]
+                    }
+                  </p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+        <section id="algorithms" className="section">
+          <p className="eyebrow">ALGORITHM STACK</p>
+          <ScrollFloat>Not one score. A body of evidence.</ScrollFloat>
+          <div className="algorithm-grid">
+            {[
+              [
+                "TEXT SIMILARITY",
+                "TF-IDF + cosine",
+                "Weights meaningful terms and compares vector direction.",
+              ],
+              [
+                "DIRECT OVERLAP",
+                "Jaccard",
+                "Measures shared keywords and normalized token sets.",
+              ],
+              [
+                "FAST SEARCH",
+                "MinHash + LSH",
+                "Approximates overlap before detailed comparison.",
+              ],
+              [
+                "CODE ANALYSIS",
+                "Token structure",
+                "Preserves syntax while normalizing incidental naming.",
+              ],
+            ].map((x) => (
+              <article key={x[0]}>
+                <span>{x[0]}</span>
+                <h3>{x[1]}</h3>
+                <p>{x[2]}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+        <section className="engine">
+          <div className="engine-copy">
+            <p className="eyebrow">INSIDE THE SIMILARITY ENGINE</p>
+            <h2>Every cell has a role.</h2>
+          </div>
+          <GridMotion items={engine} gradientColor="#090b13" />
+        </section>
+        <section className="section preview">
+          <div>
+            <p className="eyebrow">EXPLAINABLE BY DESIGN</p>
+            <h2>See why a project ranked highly.</h2>
+            <p>
+              Review the overall interpretation, each algorithm score, shared
+              concepts and short evidence. Missing inputs automatically
+              redistribute their weight.
+            </p>
+            <Link to="/analyze" className="text-link">
+              Run the demo scenario →
+            </Link>
+          </div>
+          <ScorePreview />
+        </section>
+        <section className="cta">
+          <Iridescence
+            color={[0.35, 0.25, 0.8]}
+            speed={0.15}
+            amplitude={0.05}
+          />
+          <div>
+            <p className="eyebrow">READY TO COMPARE?</p>
+            <h2>Put evidence before assumptions.</h2>
+            <p>Analyze a new academic project against the seeded repository.</p>
+            <button onClick={() => go("/analyze")}>Start an analysis →</button>
+          </div>
+        </section>
+        <ScrollVelocity
+          texts={[
+            "DETECT • COMPARE • ANALYZE • VERIFY • ",
+            "PROJECT SIMILARITY • EXPLAINABLE RESULTS • ",
+          ]}
+          velocity={18}
+        />
+      </main>
+      <Footer />
+    </>
+  );
+}
+function ScorePreview() {
+  return (
+    <div className="score-preview">
+      <div className="score-top">
+        <div>
+          <small>OVERALL SIMILARITY</small>
+          <strong>78%</strong>
+          <span>High Similarity</span>
+        </div>
+        <div className="ring">78</div>
+      </div>
+      {[
+        ["Abstract", 84],
+        ["Report", 76],
+        ["Keywords", 71],
+        ["Code tokens", 81],
+      ].map(([x, n]) => (
+        <div className="metric" key={x}>
+          <label>
+            {x}
+            <b>{n}%</b>
+          </label>
+          <i>
+            <em style={{ width: n + "%" }} />
+          </i>
+        </div>
+      ))}
+      <p className="demo-label">Illustrative product preview</p>
+    </div>
+  );
+}
+function Analyzer() {
+  const [busy, setBusy] = useState(false),
+    [error, setError] = useState(""),
+    [stage, setStage] = useState(0);
+  const stages = [
+    "Reading submission",
+    "Extracting project text",
+    "Creating feature vectors",
+    "Searching repository",
+    "Comparing source code",
+    "Ranking results",
+  ];
+  async function submit(e) {
+    e.preventDefault();
+    setError("");
+    const f = new FormData(e.currentTarget);
+    const report = f.get("report"),
+      source = f.get("source");
+    if (
+      report?.size &&
+      !["application/pdf", "text/plain"].includes(report.type)
+    ) {
+      setError("Report must be PDF or TXT.");
+      return;
+    }
+    if (source?.size > 5e6) {
+      setError("Source bundle must be smaller than 5 MB.");
+      return;
+    }
+    setBusy(true);
+    let timer = setInterval(() => setStage((s) => Math.min(s + 1, 5)), 220);
+    try {
+      const r = await api.analyze(f);
+      clearInterval(timer);
+      setStage(6);
+      go("/results/" + r.id);
+    } catch (err) {
+      clearInterval(timer);
+      setError(err.message);
+      setBusy(false);
+    }
+  }
+  return (
+    <main className="app-page">
+      <PageTitle
+        eyebrow="NEW ANALYSIS"
+        title="Compare a project"
+        copy="Provide core project content. Files are read as data only and source code is never executed."
+      />
+      {busy ? (
+        <Processing stages={stages} stage={stage} />
+      ) : (
+        <form className="form-card" onSubmit={submit}>
+          <div className="form-grid">
+            <Field
+              label="Project title"
+              name="title"
+              required
+              minLength="3"
+              placeholder="Academic Project Similarity Checker"
+            />
+            <Field
+              label="Team / student"
+              name="team_name"
+              placeholder="Team name"
+            />
+            <label className="wide">
+              Abstract
+              <textarea
+                name="abstract"
+                required
+                minLength="20"
+                rows="5"
+                placeholder="Describe the problem, method and expected outcome…"
+              />
+            </label>
+            <label className="wide">
+              Description
+              <textarea
+                name="description"
+                rows="3"
+                placeholder="Add implementation details and scope…"
+              />
+            </label>
+            <Field
+              label="Keywords (comma separated)"
+              name="keywords"
+              placeholder="TF-IDF, cosine similarity, NLP"
+            />
+            <label>
+              Category
+              <select name="category">
+                <option>Natural Language Processing</option>
+                <option>Machine Learning</option>
+                <option>Software Engineering</option>
+                <option>Web Development</option>
+                <option>Other</option>
+              </select>
+            </label>
+            <Field
+              label="Academic year"
+              name="academic_year"
+              placeholder="2025-26"
+            />
+            <div />
+            <Upload
+              name="report"
+              label="Project report"
+              accept=".pdf,.txt"
+              note="PDF or TXT · maximum 10 MB"
+            />
+            <Upload
+              name="source"
+              label="Source code"
+              accept=".zip,.py,.js,.jsx,.ts,.tsx,.java,.cpp,.c,.cs"
+              note="ZIP or source file · maximum 5 MB"
+            />
+          </div>
+          {error && (
+            <p className="error" role="alert">
+              {error}
+            </p>
+          )}
+          <div className="form-footer">
+            <p>
+              By continuing, you acknowledge results support—not
+              replace—academic review.
+            </p>
+            <button>Run Similarity Analysis →</button>
+          </div>
+        </form>
+      )}
+    </main>
+  );
+}
+function Field({ label, ...props }) {
+  return (
+    <label>
+      {label}
+      <input {...props} />
+    </label>
+  );
+}
+function Upload({ label, note, ...props }) {
+  return (
+    <label className="upload">
+      <span>↑</span>
+      <b>{label}</b>
+      <small>{note}</small>
+      <input type="file" {...props} />
+    </label>
+  );
+}
+function Processing({ stages, stage }) {
+  return (
+    <section className="processing">
+      <div className="pulse" />
+      <p className="eyebrow">ANALYSIS IN PROGRESS</p>
+      <h2>Building an evidence trail</h2>
+      {stages.map((x, i) => (
+        <div
+          className={i < stage ? "done" : i === stage ? "active" : ""}
+          key={x}
+        >
+          <b>{i < stage ? "✓" : i === stage ? "●" : "○"}</b>
+          {x}
+        </div>
+      ))}
+    </section>
+  );
+}
+function Projects() {
+  const [items, setItems] = useState([]),
+    [query, setQuery] = useState(""),
+    [error, setError] = useState("");
+  useEffect(() => {
+    const id = setTimeout(
+      () =>
+        api
+          .projects("?search=" + encodeURIComponent(query))
+          .then(setItems)
+          .catch((e) => setError(e.message)),
+      200
+    );
+    return () => clearTimeout(id);
+  }, [query]);
+  return (
+    <main className="app-page">
+      <PageTitle
+        eyebrow="HISTORICAL REPOSITORY"
+        title="Project repository"
+        copy="Search the projects used as evidence during similarity analysis."
+      />
+      <div className="toolbar">
+        <input
+          aria-label="Search projects"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search title or abstract…"
+        />
+        <span>{items.length} projects</span>
+      </div>
+      {error && <p className="error">{error}</p>}
+      <div className="project-grid">
+        {items.map((p) => (
+          <Link to={"/projects/" + p.id} className="project-card" key={p.id}>
+            <div>
+              <span>{p.category}</span>
+              <b>{p.academic_year}</b>
+            </div>
+            <h2>{p.title}</h2>
+            <p>{p.abstract}</p>
+            <footer>
+              <small>{p.team_name}</small>
+              <strong>View project →</strong>
+            </footer>
+          </Link>
+        ))}
+      </div>
+    </main>
+  );
+}
+function ProjectDetail({ id }) {
+  const [p, setP] = useState();
+  useEffect(() => {
+    api.project(id).then(setP);
+  }, [id]);
+  if (!p)
+    return (
+      <main className="app-page">
+        <p>Loading project…</p>
+      </main>
+    );
+  return (
+    <main className="app-page">
+      <Link to="/projects" className="back">
+        ← Repository
+      </Link>
+      <article className="detail">
+        <p className="eyebrow">
+          {p.category} · {p.academic_year}
+        </p>
+        <h1>{p.title}</h1>
+        <p className="lede">{p.abstract}</p>
+        <h2>Project description</h2>
+        <p>{p.description}</p>
+        <h2>Keywords</h2>
+        <div className="chips">
+          {p.keywords.map((x) => (
+            <span key={x}>{x}</span>
+          ))}
+        </div>
+        <dl>
+          <dt>Team</dt>
+          <dd>{p.team_name}</dd>
+          <dt>Added</dt>
+          <dd>{new Date(p.created_at).toLocaleDateString()}</dd>
+        </dl>
+        <Link to="/analyze" className="button-link">
+          Analyze a related project →
+        </Link>
+      </article>
+    </main>
+  );
+}
+function Results({ id }) {
+  const [a, setA] = useState(),
+    [error, setError] = useState("");
+  useEffect(() => {
+    api
+      .analysis(id)
+      .then(setA)
+      .catch((e) => setError(e.message));
+  }, [id]);
+  if (error)
+    return (
+      <main className="app-page">
+        <p className="error">{error}</p>
+      </main>
+    );
+  if (!a)
+    return (
+      <main className="app-page">
+        <p>Loading analysis…</p>
+      </main>
+    );
+  const top = a.results[0];
+  return (
+    <main className="app-page results">
+      <div className="result-head">
+        <div>
+          <p className="eyebrow">ANALYSIS #{a.id}</p>
+          <h1>{a.title}</h1>
+          <p>
+            Completed {new Date(a.created_at).toLocaleString()} · Compared
+            against {a.results.length} candidates
+          </p>
+        </div>
+        <button onClick={() => print()}>Print report</button>
+      </div>
+      <section className="overall">
+        <div>
+          <small>TOP-MATCH SIMILARITY</small>
+          <strong>{Math.round(a.overall_score * 100)}%</strong>
+          <span>{a.classification}</span>
+        </div>
+        <p>
+          This score indicates evidence strength for the nearest repository
+          match. It is not an automatic misconduct decision.
+        </p>
+      </section>
+      {top && (
+        <section className="top-match">
+          <p className="eyebrow">TOP MATCH</p>
+          <h2>
+            <Link to={"/projects/" + top.project.id}>{top.project.title}</Link>
+          </h2>
+          <p>{top.project.abstract}</p>
+          <Breakdown components={top.components} />
+          <h3>Why it ranked highly</h3>
+          <ul>
+            {top.evidence.map((x) => (
+              <li key={x}>{x}</li>
+            ))}
+          </ul>
+          <div className="chips">
+            {top.shared_keywords.map((x) => (
+              <span key={x}>{x}</span>
+            ))}
+          </div>
+        </section>
+      )}
+      <h2>Ranked candidates</h2>
+      <div className="matches">
+        {a.results.map((r) => (
+          <article key={r.rank}>
+            <b>#{r.rank}</b>
+            <div>
+              <h3>
+                <Link to={"/projects/" + r.project.id}>{r.project.title}</Link>
+              </h3>
+              <span>{r.classification}</span>
+            </div>
+            <strong>{Math.round(r.score * 100)}%</strong>
+          </article>
+        ))}
+      </div>
+    </main>
+  );
+}
+function Breakdown({ components }) {
+  return (
+    <div className="breakdown">
+      {Object.entries(components).map(([k, v]) => (
+        <div className="metric" key={k}>
+          <label>
+            {k}
+            <b>{Math.round(v * 100)}%</b>
+          </label>
+          <i>
+            <em style={{ width: v * 100 + "%" }} />
+          </i>
+        </div>
+      ))}
+    </div>
+  );
+}
+function How() {
+  return (
+    <main className="app-page">
+      <PageTitle
+        eyebrow="SYSTEM EXPLANATION"
+        title="How similarity is calculated"
+        copy="A transparent retrieval and ranking pipeline built for academic evaluation."
+      />
+      <div className="how-grid">
+        {[
+          [
+            "01",
+            "Submission & validation",
+            "Metadata, PDF/TXT reports and source bundles are size and type checked. No submitted code is executed.",
+          ],
+          [
+            "02",
+            "Preprocessing",
+            "Text is lowercased, tokenized and stripped of punctuation and common stopwords. Code comments and identifier names are normalized.",
+          ],
+          [
+            "03",
+            "Candidate retrieval",
+            "MinHash signatures approximate shingle overlap. LSH provides a scalable shortlist strategy; small repositories use a direct fallback.",
+          ],
+          [
+            "04",
+            "Detailed comparison",
+            "TF-IDF cosine, keyword Jaccard, report similarity, title similarity, MinHash and code-token comparison produce separate values.",
+          ],
+          [
+            "05",
+            "Weighted ranking",
+            "Available signals are weighted and missing code or reports have their weight redistributed—not treated as zero.",
+          ],
+          [
+            "06",
+            "Explainable report",
+            "The dashboard exposes component scores, matching topics, reasons and ranked repository projects for human review.",
+          ],
+        ].map((x) => (
+          <article key={x[0]}>
+            <b>{x[0]}</b>
+            <h2>{x[1]}</h2>
+            <p>{x[2]}</p>
+          </article>
+        ))}
+      </div>
+      <aside className="notice">
+        <b>Important interpretation</b>
+        <p>
+          Similarity indicates related material or structure. It can reflect a
+          shared domain, standard terminology, legitimate reuse, or a case
+          requiring closer review. The system never labels a submission as
+          plagiarism.
+        </p>
+      </aside>
+    </main>
+  );
+}
+function PageTitle({ eyebrow, title, copy }) {
+  return (
+    <header className="page-title">
+      <p className="eyebrow">{eyebrow}</p>
+      <h1>{title}</h1>
+      <p>{copy}</p>
+    </header>
+  );
+}
+function Footer() {
+  return (
+    <footer className="footer">
+      <div>
+        <b>Project Similarity Detection System</b>
+        <p>University SGP Project · Explainable academic decision support.</p>
+      </div>
+      <div>
+        <b>Navigate</b>
+        <Link to="/analyze">Analyze</Link>
+        <Link to="/projects">Repository</Link>
+        <Link to="/how-it-works">How it works</Link>
+      </div>
+      <div>
+        <b>Technology</b>
+        <span>TF-IDF · Cosine</span>
+        <span>Jaccard · MinHash</span>
+        <span>LSH · Code tokens</span>
+      </div>
+      <div>
+        <b>Created by</b>
+        <span>Student team details pending</span>
+        <small>No identities fabricated.</small>
+      </div>
+    </footer>
+  );
+}
+export default function App() {
+  const [path, setPath] = useState(location.pathname);
+  useEffect(() => {
+    const f = () => {
+      setPath(location.pathname);
+      scrollTo(0, 0);
+    };
+    addEventListener("popstate", f);
+    return () => removeEventListener("popstate", f);
+  }, []);
+  let page =
+    path === "/" ? (
+      <Landing />
+    ) : path === "/analyze" ? (
+      <Analyzer />
+    ) : path === "/projects" ? (
+      <Projects />
+    ) : path === "/how-it-works" ? (
+      <How />
+    ) : path.startsWith("/results/") ? (
+      <Results id={path.split("/")[2]} />
+    ) : path.startsWith("/projects/") ? (
+      <ProjectDetail id={path.split("/")[2]} />
+    ) : (
+      <main className="app-page">
+        <h1>Page not found</h1>
+        <Link to="/">Return home</Link>
+      </main>
+    );
+  return (
+    <>
+      <Header />
+      {page}
+    </>
+  );
+}
