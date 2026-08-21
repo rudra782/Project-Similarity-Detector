@@ -9,17 +9,19 @@ import Carousel from "./components/reactbits/Carousel/Carousel";
 import GridMotion from "./components/reactbits/GridMotion/GridMotion";
 import Iridescence from "./components/reactbits/Iridescence/Iridescence";
 import ScrollVelocity from "./components/reactbits/ScrollVelocity/ScrollVelocity";
+import GlassNavbar from "./components/navigation/GlassNavbar";
 
 const go = (p) => {
   history.pushState({}, "", p);
   dispatchEvent(new PopStateEvent("popstate"));
 };
-function Link({ to, children, className = "" }) {
+function Link({ to, children, className = "", onClick }) {
   return (
     <a
       href={to}
       className={className}
       onClick={(e) => {
+        onClick?.(e);
         if (!e.metaKey && !e.ctrlKey) {
           e.preventDefault();
           go(to);
@@ -28,23 +30,6 @@ function Link({ to, children, className = "" }) {
     >
       {children}
     </a>
-  );
-}
-function Header() {
-  return (
-    <header className="header">
-      <Link to="/" className="brand">
-        <span>PS</span> Project Similarity
-      </Link>
-      <nav aria-label="Main navigation">
-        <Link to="/analyze">Analyze</Link>
-        <Link to="/projects">Repository</Link>
-        <Link to="/how-it-works">How it works</Link>
-      </nav>
-      <Link to="/analyze" className="nav-cta">
-        New analysis →
-      </Link>
-    </header>
   );
 }
 const features = [
@@ -834,7 +819,7 @@ export default function App() {
     );
   return (
     <>
-      <Header />
+      <GlassNavbar LinkComponent={Link} />
       {page}
     </>
   );
